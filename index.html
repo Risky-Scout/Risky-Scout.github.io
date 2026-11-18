@@ -57,8 +57,8 @@ a { color: var(--accent); text-underline-offset: 3px; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: 0.01em; line-height: 1.02; text-wrap: balance; margin: 0; text-transform: uppercase; }
-h1 { font-size: clamp(48px, 7vw, 88px); }
-h2 { font-size: clamp(32px, 4vw, 46px); }
+h1 { font-size: clamp(30px, 3.4vw, 40px); white-space: nowrap; }
+h2 { font-size: clamp(24px, 2.4vw, 30px); }
 h3 { font-size: 24px; font-weight: 600; margin-top: 28px; }
 p { margin: 0 0 14px; max-width: 66ch; }
 .mono, td.num, .tag { font-family: var(--mono); font-variant-numeric: tabular-nums; }
@@ -84,7 +84,7 @@ header { padding: 40px 0 28px; border-bottom: 2px solid var(--ink); }
 
 .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 1px solid var(--rule); }
 .facts div { padding: 16px 18px 16px 0; }
-.facts b { display: block; font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1; }
+.facts b { display: block; font-family: var(--display); font-size: 32px; font-weight: 800; line-height: 1; }
 .facts span { font-size: 14.5px; color: var(--muted); }
 
 /* sections */
@@ -134,11 +134,11 @@ footer .links { margin-top: 10px; }
 <a class="skip" href="#main">Skip to content</a>
 <header style="padding-top:0">
   <div class="wrap"><nav class="site" aria-label="Sections">
-    <a href="#nba">NBA props</a><a href="#soccer">Soccer</a><a href="#nfl">NFL props</a><a href="#mlb">MLB</a><a href="#tools">Market tools</a><a href="#ncaab">Live trading</a><a href="#actuarial">Actuarial</a><a href="#approach">Approach</a>
+    <a href="#nba">NBA props</a><a href="#tools">Trading tools</a><a href="#ncaab">Live trading</a><a href="#mlb">MLB</a><a href="#nfl">NFL props</a><a href="#soccer">Soccer</a><a href="#actuarial">Actuarial</a><a href="#approach">Approach</a>
   </nav></div>
   <div class="wrap top">
     <div>
-      <h1>Joseph<br>Shackelford</h1>
+      <h1>Joseph Shackelford</h1>
       <div class="cred">ASA · MAAA · Sports pricing, trading systems and risk</div>
       <p class="thesis">I price sports markets from the whole score distribution, then build the limits that decide when not to take the bet.</p>
       <div class="links">
@@ -153,10 +153,10 @@ footer .links { margin-top: 10px; }
         <thead><tr><th>Model</th><th>Method</th><th>Graded on</th></tr></thead>
         <tbody>
           <tr><td><a href="#nba">NBA player props</a></td><td>Walk-forward XGBoost means, zero-inflated negative binomial</td><td>Proper scoring vs devigged market</td></tr>
-          <tr><td><a href="#soccer">EPL and World Cup</a></td><td>Five-model scoreline ensemble, KL reconciliation to market</td><td>Walk-forward log-loss, CLV</td></tr>
-          <tr><td><a href="#nfl">NFL player props</a></td><td>One play-level simulation per game</td><td>Per-game consistency checks, CLV</td></tr>
-          <tr><td><a href="#mlb">MLB strikeouts</a></td><td>Plate-appearance binomial mixture</td><td>Holdout EV gate</td></tr>
           <tr><td><a href="#ncaab">NCAAB in-play</a></td><td>Possession simulation on KenPom ratings</td><td>CLV, Brier, PIT gate</td></tr>
+          <tr><td><a href="#mlb">MLB strikeouts</a></td><td>Plate-appearance binomial mixture</td><td>Holdout EV gate</td></tr>
+          <tr><td><a href="#nfl">NFL player props</a></td><td>One play-level simulation per game</td><td>Per-game consistency checks, CLV</td></tr>
+          <tr><td><a href="#soccer">EPL and World Cup</a></td><td>Five-model scoreline ensemble, KL reconciliation to market</td><td>Walk-forward log-loss, CLV</td></tr>
           <tr><td><a href="#actuarial">OPEB liabilities</a></td><td>Entry Age Normal, multiple decrements</td><td>Tie-out to the cent</td></tr>
         </tbody>
       </table></div>
@@ -196,50 +196,10 @@ footer .links { margin-top: 10px; }
   </div>
 </section>
 
-<section id="soccer">
-  <div class="rail">
-    <span class="idx">02 · pricing model</span>
-    <h2>Soccer scorelines</h2>
-    <div class="meta">penaltyblog, BALLDONTLIE<br>Docker, GitHub Actions<br><a href="https://github.com/Risky-Scout/epl-odds-engine">EPL source</a><br><a href="https://github.com/Risky-Scout/worldcup2026-model">World Cup source</a></div>
-  </div>
-  <div>
-    <p class="lede">Both engines are built around one object: the joint grid P(home goals = x, away goals = y). Every market (1X2, totals, both teams to score, correct score, handicaps) is read from that grid, before the match and live.</p>
-    <h3>Premier League</h3>
-    <p>Five goal models fit with time-decay weights on walk-forward train, validation and test windows: Weibull copula, Dixon-Coles, bivariate Poisson, negative binomial and zero-inflated Poisson. Pi ratings supply the prior. The ensemble weights come from validation log-loss (currently 0.30, 0.22, 0.18, 0.18 and 0.12 in that order), and a temperature parameter calibrates the grid. A live updater turns the pregame grid into an in-play grid from BALLDONTLIE match events.</p>
-    <h3>World Cup 2026</h3>
-    <p>The same grid for every match of the tournament, built on a composite team prior (market odds, FIFA ranking, qualifying form, confederation strength) and reconciled to the no-vig market by minimum KL divergence. With only four to eight matches per team, the reconciliation does the heavy lifting: it keeps the model's shape while matching the market's information, and it updates live during the match.</p>
-  </div>
-</section>
-
-<section id="nfl">
-  <div class="rail">
-    <span class="idx">03 · pricing model</span>
-    <h2>NFL player props</h2>
-    <div class="meta">BALLDONTLIE NFL API<br>127 tests<br>CI-enforced contracts</div>
-  </div>
-  <div>
-    <p class="lede">Every prop for a game comes from one simulation of that game, so the props cannot contradict each other.</p>
-    <p>Most prop models are a stack of separate regressions, which is how a quarterback ends up projected for 260 passing yards while his receivers add up to 291. Here the game is simulated play by play: environment, availability, dropbacks and rushes, targets, completions, scoring, overtime if tied. A quarterback's passing yards are the sum of the receiving gains on his completions, and that identity is checked on every simulated game; a violation stops the run.</p>
-    <p class="status">Built for the 2026-27 season against the BALLDONTLIE NFL API.</p>
-  </div>
-</section>
-
-<section id="mlb">
-  <div class="rail">
-    <span class="idx">04 · pricing model</span>
-    <h2>MLB strikeouts</h2>
-    <div class="meta"><a href="https://github.com/Risky-Scout/mlb-odds-engine">Source on GitHub</a></div>
-  </div>
-  <div>
-    <p class="lede">Pitcher strikeout distributions from a plate-appearance binomial mixture, priced against sportsbook ladders.</p>
-    <p>Strikeouts are modeled per plate appearance as a binomial mixture, then post-calibrated on the main line. The EV threshold for betting was fit on one window and tested on a later holdout before it was used.</p>
-  </div>
-</section>
-
 <section id="tools">
   <div class="rail">
-    <span class="idx">05 · market tools</span>
-    <h2>Scanning, quoting, paper trading</h2>
+    <span class="idx">02 · market tools</span>
+    <h2>Trading tools</h2>
   </div>
   <div class="cols">
     <div class="card">
@@ -252,14 +212,14 @@ footer .links { margin-top: 10px; }
     </div>
     <div class="card">
       <h3>NBA in-play trader</h3>
-      <p>A possession-level Markov model of NBA games feeding an automated player-prop trader on Kalshi. It runs in paper mode and is graded on every market before any real stake goes in.</p>
+      <p>A possession-level Markov model of NBA games feeding an automated player-prop trader on Kalshi. Every market it trades is logged and graded against the closing price.</p>
     </div>
   </div>
 </section>
 
 <section id="ncaab">
   <div class="rail">
-    <span class="idx">06 · live execution</span>
+    <span class="idx">03 · live execution</span>
     <h2>NCAAB in-play engine</h2>
     <div class="meta">Python, Numba, asyncio<br>ESPN, Odds API, KenPom<br>Novig and Kalshi orders<br>136 automated tests<br>Code walkthrough on request</div>
   </div>
@@ -316,6 +276,46 @@ footer .links { margin-top: 10px; }
   </div>
 </section>
 
+<section id="mlb">
+  <div class="rail">
+    <span class="idx">04 · pricing model</span>
+    <h2>MLB strikeouts</h2>
+    <div class="meta"><a href="https://github.com/Risky-Scout/mlb-odds-engine">Source on GitHub</a></div>
+  </div>
+  <div>
+    <p class="lede">Pitcher strikeout distributions from a plate-appearance binomial mixture, priced against sportsbook ladders.</p>
+    <p>Strikeouts are modeled per plate appearance as a binomial mixture, then post-calibrated on the main line. The EV threshold for betting was fit on one window and tested on a later holdout before it was used.</p>
+  </div>
+</section>
+
+<section id="nfl">
+  <div class="rail">
+    <span class="idx">05 · pricing model</span>
+    <h2>NFL player props</h2>
+    <div class="meta">BALLDONTLIE NFL API<br>127 tests<br>CI-enforced contracts</div>
+  </div>
+  <div>
+    <p class="lede">Every prop for a game comes from one simulation of that game, so the props cannot contradict each other.</p>
+    <p>Most prop models are a stack of separate regressions, which is how a quarterback ends up projected for 260 passing yards while his receivers add up to 291. Here the game is simulated play by play: environment, availability, dropbacks and rushes, targets, completions, scoring, overtime if tied. A quarterback's passing yards are the sum of the receiving gains on his completions, and that identity is checked on every simulated game; a violation stops the run.</p>
+    <p class="status">Built for the 2026-27 season against the BALLDONTLIE NFL API.</p>
+  </div>
+</section>
+
+<section id="soccer">
+  <div class="rail">
+    <span class="idx">06 · pricing model</span>
+    <h2>Soccer scorelines</h2>
+    <div class="meta">penaltyblog, BALLDONTLIE<br>Docker, GitHub Actions<br><a href="https://github.com/Risky-Scout/epl-odds-engine">EPL source</a><br><a href="https://github.com/Risky-Scout/worldcup2026-model">World Cup source</a></div>
+  </div>
+  <div>
+    <p class="lede">Both engines are built around one object: the joint grid P(home goals = x, away goals = y). Every market (1X2, totals, both teams to score, correct score, handicaps) is read from that grid, before the match and live.</p>
+    <h3>Premier League</h3>
+    <p>Five goal models fit with time-decay weights on walk-forward train, validation and test windows: Weibull copula, Dixon-Coles, bivariate Poisson, negative binomial and zero-inflated Poisson. Pi ratings supply the prior. The ensemble weights come from validation log-loss (currently 0.30, 0.22, 0.18, 0.18 and 0.12 in that order), and a temperature parameter calibrates the grid. A live updater turns the pregame grid into an in-play grid from BALLDONTLIE match events.</p>
+    <h3>World Cup 2026</h3>
+    <p>The same grid for every match of the tournament, built on a composite team prior (market odds, FIFA ranking, qualifying form, confederation strength) and reconciled to the no-vig market by minimum KL divergence. With only four to eight matches per team, the reconciliation does the heavy lifting: it keeps the model's shape while matching the market's information, and it updates live during the match.</p>
+  </div>
+</section>
+
 <section id="actuarial">
   <div class="rail">
     <span class="idx">07 · actuarial</span>
@@ -339,8 +339,6 @@ footer .links { margin-top: 10px; }
   </div>
 </section>
 
-
-
 <section id="approach">
   <div class="rail">
     <span class="idx">08 · approach</span>
@@ -356,6 +354,24 @@ footer .links { margin-top: 10px; }
     </ul>
   </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
