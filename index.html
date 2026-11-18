@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Joseph Shackelford Portfolio</title>
+<meta name="description" content="Joseph Shackelford, ASA, MAAA. Sports pricing, live trading systems and risk controls, built by an actuary.">
+<link rel="canonical" href="https://risky-scout.github.io/">
+<meta name="author" content="Joseph Shackelford">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Joseph Shackelford, ASA, MAAA">
+<meta property="og:description" content="Sports pricing models, live trading systems and risk controls, built by a credentialed actuary.">
+<meta property="og:url" content="https://risky-scout.github.io/">
+<meta property="og:image" content="https://risky-scout.github.io/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Contingent_Odds">
+<meta name="twitter:image" content="https://risky-scout.github.io/og.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315191f'/%3E%3Ctext x='32' y='44' font-family='Arial Narrow,Arial,sans-serif' font-weight='700' font-size='34' text-anchor='middle' fill='%23f3f4f1'%3EJS%3C/text%3E%3Crect x='10' y='52' width='44' height='4' fill='%231d55c9'/%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Joseph Shackelford","honorificSuffix":"ASA, MAAA","jobTitle":"Actuary and sports quantitative analyst","address":{"@type":"PostalAddress","addressLocality":"Macon","addressRegion":"GA","addressCountry":"US"},"alumniOf":[{"@type":"CollegeOrUniversity","name":"College of Charleston"},{"@type":"CollegeOrUniversity","name":"Georgia College & State University"}],"url":"https://risky-scout.github.io/","sameAs":["https://github.com/Risky-Scout","https://www.linkedin.com/in/joseph-shackelford-8b787533","https://x.com/Contingent_Odds"]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a two-column pricing sheet. Narrow left rail of labels, wide right column of evidence. One bold moment: the live score distribution in the header. */
+:root {
+  --paper: #f3f4f1;
+  --ink: #15191f;
+  --muted: #5a626c;
+  --rule: #d3d7d4;
+  --accent: #1d55c9;      /* the cover side, links, the one strong colour */
+  --accent-soft: #c9d6f3;
+  --warn: #a8461b;        /* only for failures */
+  --panel: #ffffff;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111418; --ink: #e8eaec; --muted: #9aa3ad; --rule: #2b3138;
+    --accent: #7ea2f5; --accent-soft: #24365e; --warn: #e08a5f; --panel: #171b20;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111418; --ink: #e8eaec; --muted: #9aa3ad; --rule: #2b3138;
+  --accent: #7ea2f5; --accent-soft: #24365e; --warn: #e08a5f; --panel: #171b20;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.55; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: 0.01em; line-height: 1.02; text-wrap: balance; margin: 0; text-transform: uppercase; }
+h1 { font-size: clamp(48px, 7vw, 88px); }
+h2 { font-size: clamp(32px, 4vw, 46px); }
+h3 { font-size: 24px; font-weight: 600; margin-top: 28px; }
+p { margin: 0 0 14px; max-width: 66ch; }
+.mono, td.num, .tag { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.skip { position: absolute; left: -9999px; top: 8px; background: var(--ink); color: var(--paper); padding: 6px 10px; font-family: var(--mono); font-size: 14px; z-index: 10; }
+.skip:focus { left: 8px; }
+nav.site { display: flex; flex-wrap: wrap; gap: 6px 22px; padding: 14px 0 0; font-family: var(--mono); font-size: 13.5px; }
+nav.site a { color: var(--muted); text-decoration: none; }
+nav.site a:hover, nav.site a:focus-visible { color: var(--accent); text-decoration: underline; }
+@media print { nav.site, .skip { display: none; } body { background: #fff; color: #000; font-size: 12pt; } section { break-inside: avoid; } a { color: #000; } }
+.top { padding-top: 26px; }
+/* header */
+header { padding: 40px 0 28px; border-bottom: 2px solid var(--ink); }
+.top { display: grid; grid-template-columns: 0.9fr 1.3fr; gap: 40px; align-items: end; }
+.cred { font-family: var(--mono); font-size: 14px; color: var(--muted); margin: 12px 0 18px; letter-spacing: 0.02em; }
+.thesis { font-size: 22px; line-height: 1.4; max-width: 30ch; }
+.links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; font-family: var(--mono); font-size: 14px; }
+.chart-box { background: var(--panel); border: 1px solid var(--rule); padding: 16px 16px 8px; }
+.chart-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.chart-head b { color: var(--ink); font-weight: 500; }
+.idx-tbl { font-size: 14.5px; } .idx-tbl td { padding: 7px 10px 7px 0; }
+.chart-foot { font-size: 14px; color: var(--muted); margin-top: 6px; }
+
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 1px solid var(--rule); }
+.facts div { padding: 16px 18px 16px 0; }
+.facts b { display: block; font-family: var(--display); font-size: 40px; font-weight: 800; line-height: 1; }
+.facts span { font-size: 14.5px; color: var(--muted); }
+
+/* sections */
+section { display: grid; grid-template-columns: 220px 1fr; gap: 32px; padding: 52px 0; border-bottom: 1px solid var(--rule); }
+.rail { position: relative; }
+.rail .idx { font-family: var(--mono); font-size: 13px; color: var(--muted); display: block; margin-bottom: 10px; }
+.rail .meta { font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 16px; line-height: 1.7; }
+.lede { font-size: 21px; line-height: 1.45; }
+.tbl { overflow-x: auto; margin: 18px 0 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 16px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 14px 9px 0; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--mono); font-size: 12.5px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1.5px solid var(--ink); }
+td.num { text-align: right; white-space: nowrap; }
+th.num { text-align: right; }
+td:first-child { font-weight: 500; }
+.diagram { overflow-x: auto; margin: 22px 0 10px; background: var(--panel); border: 1px solid var(--rule); padding: 14px; }
+.diagram svg { min-width: 760px; width: 100%; height: auto; display: block; }
+.diagram text { font-family: var(--mono); font-size: 12px; fill: var(--ink); }
+.diagram .sub { fill: var(--muted); font-size: 11px; }
+.diagram .box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.diagram .gate { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.4; }
+.diagram .arrow { stroke: var(--ink); stroke-width: 1.2; fill: none; marker-end: url(#ah); }
+.diagram .loop { stroke: var(--accent); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; marker-end: url(#ahb); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.card h3 { margin-top: 0; }
+.card { border-top: 2px solid var(--ink); padding-top: 14px; }
+.tag { display: inline-block; font-size: 12px; padding: 2px 7px; border: 1px solid var(--rule); color: var(--muted); margin: 0 6px 6px 0; }
+.status { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.fail td:first-child { color: var(--warn); font-weight: 500; }
+ul.plain { padding-left: 20px; margin: 0 0 14px; max-width: 66ch; }
+ul.plain li { margin-bottom: 6px; }
+footer { padding: 40px 0 60px; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+footer .links { margin-top: 10px; }
+
+@media (max-width: 860px) {
+  .top { grid-template-columns: 1fr; }
+  section { grid-template-columns: 1fr; gap: 12px; padding: 40px 0; }
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .cols { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  #pmf .bar { transition: opacity .2s; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header style="padding-top:0">
+  <div class="wrap"><nav class="site" aria-label="Sections">
+    <a href="#nba">NBA props</a><a href="#soccer">Soccer</a><a href="#nfl">NFL props</a><a href="#mlb">MLB</a><a href="#tools">Market tools</a><a href="#ncaab">Live trading</a><a href="#actuarial">Actuarial</a><a href="#approach">Approach</a>
+  </nav></div>
+  <div class="wrap top">
+    <div>
+      <h1>Joseph<br>Shackelford</h1>
+      <div class="cred">ASA · MAAA · Sports pricing, trading systems and risk</div>
+      <p class="thesis">I price sports markets from the whole score distribution, then build the limits that decide when not to take the bet.</p>
+      <div class="links">
+        <a href="https://github.com/Risky-Scout">github.com/Risky-Scout</a>
+        <a href="https://www.linkedin.com/in/joseph-shackelford-8b787533">LinkedIn</a>
+        <a href="https://x.com/Contingent_Odds">x.com/Contingent_Odds</a>
+      </div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-head"><span><b>Models I built</b></span><span>each outputs a full distribution</span></div>
+      <div class="tbl" style="margin:8px 0 4px"><table class="idx-tbl">
+        <thead><tr><th>Model</th><th>Method</th><th>Graded on</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#nba">NBA player props</a></td><td>Walk-forward XGBoost means, zero-inflated negative binomial</td><td>Proper scoring vs devigged market</td></tr>
+          <tr><td><a href="#soccer">EPL and World Cup</a></td><td>Five-model scoreline ensemble, KL reconciliation to market</td><td>Walk-forward log-loss, CLV</td></tr>
+          <tr><td><a href="#nfl">NFL player props</a></td><td>One play-level simulation per game</td><td>Per-game consistency checks, CLV</td></tr>
+          <tr><td><a href="#mlb">MLB strikeouts</a></td><td>Plate-appearance binomial mixture</td><td>Holdout EV gate</td></tr>
+          <tr><td><a href="#ncaab">NCAAB in-play</a></td><td>Possession simulation on KenPom ratings</td><td>CLV, Brier, PIT gate</td></tr>
+          <tr><td><a href="#actuarial">OPEB liabilities</a></td><td>Entry Age Normal, multiple decrements</td><td>Tie-out to the cent</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap facts">
+  <div><b>10+</b><span>years as a pricing and valuation actuary</span></div>
+  <div><b>7</b><span>pricing models across four sports</span></div>
+  <div><b>273,082</b><span>out-of-fold rows behind the NBA props model</span></div>
+  <div><b>0.5%</b><span>stake per bet until a model passes its own gate</span></div>
+</div>
+</div>
+
+<main class="wrap" id="main">
+
+<section id="nba">
+  <div class="rail">
+    <span class="idx">01 · pricing model</span>
+    <h2>NBA Prop Quant</h2>
+    <div class="meta">XGBoost, scikit-learn<br>DuckDB, pydantic<br>BALLDONTLIE data<br>Private repository,<br>walkthrough on request</div>
+  </div>
+  <div>
+    <p class="lede">Pregame fair prices for ten player-prop markets: points, rebounds, assists, steals, blocks, made threes and four combinations.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Step</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>Mean models</td><td>Minutes and per-stat means fit walk-forward on 273,082 out-of-fold rows, seasons 2001 to 2025.</td></tr>
+        <tr><td>Distributions</td><td>Mean-preserving zero-inflated negative binomial for every single stat.</td></tr>
+        <tr><td>Combinations</td><td>Rebounds + assists use a dependence setting of 0.85, chosen by grouped cross-validation; the other combinations use 0.</td></tr>
+        <tr><td>Calibration</td><td>By prop type, fit only on earlier dates. Steals and blocks are left raw.</td></tr>
+        <tr><td>Freeze</td><td>Locked on 18 August 2026, before the season, so 2026-27 is an untouched test. No betting threshold was tuned on past ROI.</td></tr>
+      </tbody>
+    </table></div>
+    <p>It was developed against 145,083 priced 2025 sportsbook props, and the 2026-27 season is graded prospectively against the devigged market.</p>
+  </div>
+</section>
+
+<section id="soccer">
+  <div class="rail">
+    <span class="idx">02 · pricing model</span>
+    <h2>Soccer scorelines</h2>
+    <div class="meta">penaltyblog, BALLDONTLIE<br>Docker, GitHub Actions<br><a href="https://github.com/Risky-Scout/epl-odds-engine">EPL source</a><br><a href="https://github.com/Risky-Scout/worldcup2026-model">World Cup source</a></div>
+  </div>
+  <div>
+    <p class="lede">Both engines are built around one object: the joint grid P(home goals = x, away goals = y). Every market (1X2, totals, both teams to score, correct score, handicaps) is read from that grid, before the match and live.</p>
+    <h3>Premier League</h3>
+    <p>Five goal models fit with time-decay weights on walk-forward train, validation and test windows: Weibull copula, Dixon-Coles, bivariate Poisson, negative binomial and zero-inflated Poisson. Pi ratings supply the prior. The ensemble weights come from validation log-loss (currently 0.30, 0.22, 0.18, 0.18 and 0.12 in that order), and a temperature parameter calibrates the grid. A live updater turns the pregame grid into an in-play grid from BALLDONTLIE match events.</p>
+    <h3>World Cup 2026</h3>
+    <p>The same grid for every match of the tournament, built on a composite team prior (market odds, FIFA ranking, qualifying form, confederation strength) and reconciled to the no-vig market by minimum KL divergence. With only four to eight matches per team, the reconciliation does the heavy lifting: it keeps the model's shape while matching the market's information, and it updates live during the match.</p>
+  </div>
+</section>
+
+<section id="nfl">
+  <div class="rail">
+    <span class="idx">03 · pricing model</span>
+    <h2>NFL player props</h2>
+    <div class="meta">BALLDONTLIE NFL API<br>127 tests<br>CI-enforced contracts</div>
+  </div>
+  <div>
+    <p class="lede">Every prop for a game comes from one simulation of that game, so the props cannot contradict each other.</p>
+    <p>Most prop models are a stack of separate regressions, which is how a quarterback ends up projected for 260 passing yards while his receivers add up to 291. Here the game is simulated play by play: environment, availability, dropbacks and rushes, targets, completions, scoring, overtime if tied. A quarterback's passing yards are the sum of the receiving gains on his completions, and that identity is checked on every simulated game; a violation stops the run.</p>
+    <p class="status">Built for the 2026-27 season against the BALLDONTLIE NFL API.</p>
+  </div>
+</section>
+
+<section id="mlb">
+  <div class="rail">
+    <span class="idx">04 · pricing model</span>
+    <h2>MLB strikeouts</h2>
+    <div class="meta"><a href="https://github.com/Risky-Scout/mlb-odds-engine">Source on GitHub</a></div>
+  </div>
+  <div>
+    <p class="lede">Pitcher strikeout distributions from a plate-appearance binomial mixture, priced against sportsbook ladders.</p>
+    <p>Strikeouts are modeled per plate appearance as a binomial mixture, then post-calibrated on the main line. The EV threshold for betting was fit on one window and tested on a later holdout before it was used.</p>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="rail">
+    <span class="idx">05 · market tools</span>
+    <h2>Scanning, quoting, paper trading</h2>
+  </div>
+  <div class="cols">
+    <div class="card">
+      <h3>Odds scanner</h3>
+      <p>Pre-game scanner on The Odds API for positive-EV prices, arbitrage and middles. Four devig methods, prices pooled across books in logit space, fractional Kelly on the pooled fair price, CLV tracked against stored fair prices, and a staleness gate. 42 tests. For a book it is the same scan in reverse: where your own prices lag.</p>
+    </div>
+    <div class="card">
+      <h3>Kalshi market making</h3>
+      <p>Two-sided quoting with signed API access (RSA-PSS), live WebSocket order books, a model of Kalshi's quadratic fee, and a check for adverse selection: fills that keep coming from traders who know more than the quote. That is the question a risk desk asks about an account.</p>
+    </div>
+    <div class="card">
+      <h3>NBA in-play trader</h3>
+      <p>A possession-level Markov model of NBA games feeding an automated player-prop trader on Kalshi. It runs in paper mode and is graded on every market before any real stake goes in.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ncaab">
+  <div class="rail">
+    <span class="idx">06 · live execution</span>
+    <h2>NCAAB in-play engine</h2>
+    <div class="meta">Python, Numba, asyncio<br>ESPN, Odds API, KenPom<br>Novig and Kalshi orders<br>136 automated tests<br>Code walkthrough on request</div>
+  </div>
+  <div>
+    <p class="lede">My live trading system. It prices every Division I game in progress every 10 seconds and can send orders to Novig or Kalshi. Team strength comes from KenPom ratings; what I built is the possession simulation, the live updating, and above all the risk controls around execution.</p>
+    <p class="status">Live since 14 November 2026.</p>
+
+    <p>Each possession runs through a simulation of the NCAA rules (bonus at seven and ten team fouls, second-half fouls carried into overtime), and the box score moves the team rates during the game with credibility weights, n/(n + k), the same form an actuary uses to blend new claims experience with a manual rate. 25,000 simulations per game give the full distribution of the final score.</p>
+
+    <div class="diagram" role="img" aria-label="Pipeline: priors, live state and odds feed a simulation, which produces prices; guards and limits sit between prices and orders; every cycle is logged, settled each morning, and the settlement sets the next day's stake.">
+      <svg viewBox="0 0 980 300">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker>
+          <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"/></marker>
+        </defs>
+        <rect class="box" x="10" y="20" width="190" height="50"/><text x="22" y="42">KenPom priors</text><text class="sub" x="22" y="59">calibrated per matchup</text>
+        <rect class="box" x="10" y="90" width="190" height="50"/><text x="22" y="112">ESPN live state</text><text class="sub" x="22" y="129">score, fouls, possession</text>
+        <rect class="box" x="10" y="160" width="190" height="50"/><text x="22" y="182">10 books, 1 request</text><text class="sub" x="22" y="199">sharp ref devigged</text>
+        <rect class="box" x="245" y="70" width="190" height="90"/><text x="259" y="100">Simulation</text><text class="sub" x="259" y="120">25,000 paths per game</text><text class="sub" x="259" y="138">exact score distribution</text>
+        <rect class="box" x="475" y="70" width="140" height="90"/><text x="489" y="100">Prices</text><text class="sub" x="489" y="120">edge, EV, z-score</text><text class="sub" x="489" y="138">every market</text>
+        <rect class="gate" x="655" y="70" width="155" height="90"/><text x="669" y="100">Guards + limits</text><text class="sub" x="669" y="120">most bets stop here</text><text class="sub" x="669" y="138">see table below</text>
+        <rect class="box" x="850" y="70" width="120" height="90"/><text x="864" y="100">Orders</text><text class="sub" x="864" y="120">Novig, Kalshi</text><text class="sub" x="864" y="138">ledger first</text>
+        <path class="arrow" d="M200,45 C225,45 225,95 243,100"/>
+        <path class="arrow" d="M200,115 L243,115"/>
+        <path class="arrow" d="M200,185 C225,185 225,135 243,130"/>
+        <path class="arrow" d="M435,115 L473,115"/>
+        <path class="arrow" d="M615,115 L653,115"/>
+        <path class="arrow" d="M810,115 L848,115"/>
+        <path class="arrow" d="M200,192 C340,200 500,200 540,162"/>
+        <rect class="box" x="475" y="225" width="335" height="56"/><text x="489" y="248">Morning settlement</text><text class="sub" x="489" y="266">CLV, Brier vs market, log-loss, CRPS, PIT</text>
+        <path class="arrow" d="M910,160 C910,250 850,253 812,253"/>
+        <path class="loop" d="M475,253 C350,253 340,200 340,163"/>
+        <text class="sub" x="250" y="228" style="fill:var(--accent)">sets tomorrow's stake</text>
+      </svg>
+    </div>
+
+    <h3>Risk controls</h3>
+    <p>Most of the code that touches money decides when not to bet.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Control</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Stake</td><td>0.5% of bankroll per wager until the gate passes; 1.5% once it passes on 300 signals; 3.0% if it still passes at 600. Set at startup, never mid-slate, and it falls back to 0.5% if a later slate fails.</td></tr>
+        <tr><td>Go-live gate</td><td>300 settled signals, positive mean CLV, score distributions a PIT test does not reject, model Brier no worse than the devigged sharp market.</td></tr>
+        <tr><td>Exposure</td><td>14% of bankroll per game, 60% open. A game's exposure stays locked for 15 minutes after it drops off the ESPN feed, which loses games for minutes at a time.</td></tr>
+        <tr><td>Positions</td><td>One per game, market and side at any line. The other side is blocked. A second bet only on a strong signal, at least 180 s later, never at a worse line.</td></tr>
+        <tr><td>Data guards</td><td>The whole game stops when the model and the sharp line differ by more than 3 points on the spread or 8 on the total. Late blowouts, unclear possession, lagging play-by-play and stale quotes stop it too.</td></tr>
+        <tr><td>Sanity ceiling</td><td>An edge above 20% or EV above 35% is a data error, never a bet.</td></tr>
+        <tr><td>Venue checks</td><td>A price clearly worse than the sharp reference is skipped and the other venue tried. Every order is written to the ledger before it is sent; an unknown order state is never re-sent.</td></tr>
+        <tr><td>Dry run</td><td>Runs the same rules as real orders and splits only at the venue call, so a dry run shows what a real night would do.</td></tr>
+      </tbody>
+    </table></div>
+
+    
+  </div>
+</section>
+
+<section id="actuarial">
+  <div class="rail">
+    <span class="idx">07 · actuarial</span>
+    <h2>Liability valuation</h2>
+    <div class="meta">FBAC LLC<br>GASB 74/75<br><a href="https://github.com/Risky-Scout/opeb-full-valuation">Full valuation</a><br><a href="https://github.com/Risky-Scout/opeb-roll-forward">Roll-forward</a></div>
+  </div>
+  <div>
+    <p class="lede">A book's open bets are a liability, and pricing them is the problem I worked on for ten years in insurance.</p>
+    <p>Through FBAC LLC I value retiree-health liabilities for Louisiana public employers, including several parish sheriffs' offices. The automation is more than 4,000 lines of Python across eight modules, handles funded and unfunded plans, and ties out to the cent against the prior report before anything reaches a client. Before that: P&amp;C pricing and reserving at Indiana Farm Bureau, Medicaid capitation at Milliman, and health pricing at Pan-American Life, BCBS of Louisiana, Watkins Ross (where I managed two analysts) and Danziger &amp; Markhoff.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>In insurance</th><th>On a trading desk</th></tr></thead>
+      <tbody>
+        <tr><td>Reserving for incurred losses</td><td>Marking open liability on accepted bets, by outcome</td></tr>
+        <tr><td>Credibility of new experience</td><td>Trusting a new account's results only as its sample grows, and setting its limits that way</td></tr>
+        <tr><td>Frequency × severity</td><td>Possessions × points per possession; bet count × stake</td></tr>
+        <tr><td>Removing expense and profit loads</td><td>Devigging to a fair price, then adding margin by market</td></tr>
+        <tr><td>Actual to expected</td><td>CLV against the sharp closing price</td></tr>
+        <tr><td>Retention limits, reinsurance</td><td>Exposure caps per game and event; laying off on an exchange</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+
+
+<section id="approach">
+  <div class="rail">
+    <span class="idx">08 · approach</span>
+    <h2>How I run risk</h2>
+  </div>
+  <div>
+    <ul class="plain">
+      <li>Price from a distribution, never from a point estimate. Correlated legs, pushes and team totals all come from the same joint distribution.</li>
+      <li>Grade every decision against the market, not the result. CLV and Brier against the devigged sharp price tell you in weeks what P&amp;L takes a season to say.</li>
+      <li>Size by credibility. A new model, a new market or a new account starts small and earns room as its sample grows.</li>
+      <li>Treat big edges as data problems first. When a model and a sharp market disagree by a lot, the model is usually the one that is wrong.</li>
+      <li>Write the rule down and test it. A limit that lives in someone's head fails at 7:05 on a Saturday with 40 games live.</li>
+    </ul>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Joseph Shackelford, ASA, MAAA · Macon, GA · M.S. Mathematics, College of Charleston
+    <div class="links">
+      <a href="https://github.com/Risky-Scout">GitHub</a>
+      <a href="https://www.linkedin.com/in/joseph-shackelford-8b787533">LinkedIn</a>
+      <a href="https://x.com/Contingent_Odds">X</a>
+    </div>
+  </div>
+</footer>
+
+
+</body>
+</html>

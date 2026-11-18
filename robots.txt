@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://risky-scout.github.io/sitemap.xml
